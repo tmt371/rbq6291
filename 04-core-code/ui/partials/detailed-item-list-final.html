@@ -3,8 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, 
-initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detailed Item List</title>
     <style>
         :root {
@@ -187,22 +186,22 @@ initial-scale=1.0">
             align-items: flex-start;
         }
 
-        /* <CHANGE> ?†åˆ¥è¨­å??©å€‹å??ƒç???flex å±¬æ€§ï?ä½¿è¡¨?¼ä?å»¶å? */
+        /* <CHANGE> ?? Ã¥Ë†Â¥Ã¨Â¨Â­Ã??Â©Ã¥?¬â€¹Ã???Ã§???flex Ã¥Â±Â¬Ã¦?¬Â§Ã?Ã¤Â½Â¿Ã¨Â¡Â¨?Â¼Ã¤?Ã¥Â»Â¶Ã¥? */
         .appendix-flex-container>.table-scroll-wrapper {
             flex: 0 0 auto;
-            /* ä¸ ä¼¸ç¸®ï??¹æ??§å®¹æ±ºå?å¯¬åº¦ */
+            /* Ã¤Â¸ Ã¤Â¼Â¸Ã§Â¸Â®Ã¯??Â¹Ã¦??Â§Ã¥Â®Â¹Ã¦Â±ÂºÃ¥?Ã¥Â¯Â¬Ã¥ÂºÂ¦ */
             max-width: 400px;
-            /* ?€å¤§å¯¬åº?400px */
+            /* ??¬Ã¥Â¤Â§Ã¥Â¯Â¬Ã¥Â?400px */
 
             min-width: 272px;
-            /* ?€å° å¯¬åº?272px */
+            /* ??¬Ã¥Â?Ã¥Â¯Â¬Ã¥Âº?272px */
         }
 
         .appendix-flex-container>.legend {
             flex: 1;
-            /* ä½”ç”¨?©é?ç©ºé? */
+            /* Ã¤Â½? Ã§â€ Â?Â©Ã©?Ã§Â©ÂºÃ©? */
             min-width: 250px;
-            /* ç¢ºä??–ä??‰è¶³å¤ å¯¬åº?*/
+            /* Ã§Â¢ÂºÃ¤???“Ã???°Ã¨Â¶Â³Ã¥Â¤Â Ã¥Â¯Â¬Ã¥Â?*/
         }
 
         @media (max-width: 850px) {
@@ -336,13 +335,13 @@ initial-scale=1.0">
             }
 
             /* --- [NEW v6290 Task 4] Print Override for Mobile Card View --- */
-            /* 強制恢復表格佈局 */
+            /* å¼·åˆ¶?¢å¾©è¡¨æ ¼ä½ˆå? */
             .detailed-list-table {
                 display: table !important;
                 table-layout: fixed !important;
             }
 
-            /* 強制顯示表格標頭 */
+            /* å¼·åˆ¶é¡¯ç¤ºè¡¨æ ¼æ¨™é ­ */
             .detailed-list-table thead {
                 display: table-header-group !important;
                 position: static !important;
@@ -354,7 +353,7 @@ initial-scale=1.0">
                 clip: rect(auto, auto, auto, auto) !important;
             }
 
-            /* 強制恢復表格行 */
+            /* å¼·åˆ¶?¢å¾©è¡¨æ ¼è¡?*/
             .detailed-list-table tr {
                 display: table-row !important;
                 margin-bottom: 0 !important;
@@ -362,7 +361,7 @@ initial-scale=1.0">
                 box-shadow: none !important;
             }
 
-            /* 強制恢復表格儲存格 */
+            /* å¼·åˆ¶?¢å¾©è¡¨æ ¼?²å???*/
             .detailed-list-table td {
                 display: table-cell !important;
                 justify-content: flex-start !important;
@@ -370,7 +369,7 @@ initial-scale=1.0">
                 border-bottom: 1px solid var(--border-light-grey) !important;
             }
 
-            /* 強制隱藏卡片模式的標籤 */
+            /* å¼·åˆ¶?±è??¡ç?æ¨¡å??„æ?ç±?*/
             .detailed-list-table td:before {
                 content: none !important;
                 display: none !important;
@@ -404,21 +403,17 @@ initial-scale=1.0">
                     <table class="motorised-accessories-table">
                         <colgroup>
                             <col style="width: auto;">
-
-
                             <col style="width: auto;">
                             <col style="width: auto;">
                         </colgroup>
 
                         <thead>
                             <tr class="table-title">
-                                <th colspan="3">Motorised Accessories Summary</th>
-
+                                <th colspan="3">Motorised Package Summary</th>
                             </tr>
                             <tr>
                                 <th>Item</th>
                                 <th class="text-center">QTY</th>
-
                                 <th class="text-right">Total Price</th>
                             </tr>
                         </thead>
@@ -426,44 +421,34 @@ initial-scale=1.0">
                         <tbody>
                             <tr>
                                 <td data-label="Item">Motor</td>
-
                                 <td data-label="QTY" class="text-center">{{motorQty}}</td>
                                 <td data-label="Total Price" class="text-right">{{motorPrice}}</td>
                             </tr>
-
                             <tr>
                                 <td data-label="Item">Remote (1CH)</td>
                                 <td data-label="QTY" class="text-center">{{remote1chQty}}</td>
-
                                 <td data-label="Total Price" class="text-right">{{remote1chPrice}}</td>
                             </tr>
                             <tr>
-
                                 <td data-label="Item">Remote (16CH)</td>
                                 <td data-label="QTY" class="text-center">{{remote16chQty}}</td>
                                 <td data-label="Total Price" class="text-right">{{remote16chPrice}}</td>
-
                             </tr>
                             <tr>
                                 <td data-label="Item">Charger</td>
-
                                 <td data-label="QTY" class="text-center">{{chargerQty}}</td>
                                 <td data-label="Total Price" class="text-right">{{chargerPrice}}</td>
                             </tr>
-
                             <tr>
                                 <td data-label="Item">3M Cord</td>
                                 <td data-label="QTY" class="text-center">{{cord3mQty}}</td>
-
                                 <td data-label="Total Price" class="text-right">{{cord3mPrice}}</td>
                             </tr>
                         </tbody>
                         <tfoot>
-
                             <tr class="total-row">
                                 <td colspan="2" class="text-right">Total</td>
                                 <td class="text-right">{{eAcceSum}}</td>
-
                             </tr>
                         </tfoot>
                     </table>
@@ -476,7 +461,6 @@ initial-scale=1.0">
                             F-Color:</strong> Blockout (BO)</p>
                     <p><span class="color-swatch" style="background-color: #e0f7fa;"></span><strong>F-Name &
                             F-Color:</strong> Screen (SN)</p>
-
                     <p><span class="color-swatch" style="background-color: #ffe4e1;"></span><strong>F-Name &
                             F-Color:</strong> Light Filter (LF)</p>
                     <p><strong>HD:</strong> Heavy-Duty Winder</p>

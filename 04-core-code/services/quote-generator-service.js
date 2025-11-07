@@ -112,17 +112,17 @@ export class QuoteGeneratorService {
             const getInlinedHtmlForGmail = () => {
                 const clone = document.documentElement.cloneNode(true);
    
-                // --- ä¿®æ­£æ¨™é?è¤‡è£½? é? (Phase 3, Step A) ---
+                // --- Ã¤Â¿Â®Ã¦Â­Â£Ã¦Â¨?¢Ã?Ã¨Â¤?¡Ã¨Â?? Ã©? (Phase 3, Step A) ---
                 clone.querySelector('title')?.remove();
                 
-                // ç§»é™¤ <style> æ¨™ç±¤ (GTH æ¨¡æ ¿æ¨??å·²å…§??
+                // Ã§Â§Â»Ã©?¢Â?<style> Ã¦Â¨?¢Ã§Â±Â?(GTH Ã¦Â¨Â¡Ã¦ Â¿Ã¦Â¨??Ã¥Â·Â²Ã¥?¦Â??
                 clone.querySelectorAll('style').forEach(s => s.remove());
                 
-                // ç§»é™¤? ä??‰é??Œè…³??
+                // Ã§Â§Â»Ã©?¢Â? Ã¤???°Ã???Ã¨?¦Â??
                 clone.querySelector('#action-bar')?.remove();
                 clone.querySelectorAll('script').forEach(s => s.remove());
 
-                // è¿”å? HTML ??ç´”æ???
+                // Ã¨Â¿? Ã? HTML ??Ã§Â´? Ã???
                 return {
                     html: '<!DOCTYPE html>' + clone.outerHTML,
                     text: clone.innerText || clone.textContent
@@ -139,28 +139,23 @@ export class QuoteGeneratorService {
                             const { html, text } = getInlinedHtmlForGmail();
 
                          
-                            // --- ä¿®æ­£?‹æ?è²¼ä?? é? (Phase 3, Step A) ---
-                            // å¿…é??Œæ?å»ºç? text/html ??text/plain ?©ç¨® Blob
+                            // --- Ã¤Â¿Â®Ã¦Â­Â£??¹Ã?Ã¨Â²Â¼Ã¤?? Ã©? (Phase 3, Step A) ---
+                            // Ã¥Â¿?¦Ã???Ã¦?Ã¥Â»ÂºÃ§? text/html ??text/plain ?Â©Ã§Â¨Â® Blob
                             navigator.clipboard.write([
-                         
                                 new ClipboardItem({
                                     'text/html': new Blob([html], { type: 'text/html' }),
                                     'text/plain': new Blob([text], { type: 'text/plain' })
-     
                                 })
                             ]).then(() => {
                                 alert('Quote copied to clipboard (Rich Text)!');
                              }).catch(err => {
                                 console.error('Failed to copy rich text:', err);
                                 // Fallback to text copy if rich text fails
-                        
                                 navigator.clipboard.writeText(text).then(() => {
                                     alert('Rich text copy failed. Copied as plain text.');
                                 }).catch(err2 => {
-          
                                     console.error('Fallback text copy failed:', err2);
                                     alert('Failed to copy. Please check console.');
-                          
                                 });
                             });
 
@@ -215,10 +210,10 @@ export class QuoteGeneratorService {
             gstRowHtml = `
                 <tr>
                     <td class="summary-label"
-                        style="padding: 8px 0; border: 1px solid #dddddd; font-size: 13.3px; text-align: right; padding-right: 20px; color: #555555;">
+                         style="padding: 8px 0; border: 1px solid #dddddd; font-size: 13.3px; text-align: right; padding-right: 20px; color: #555555;">
                         GST</td>
                     <td class="summary-value"
-                        style="padding: 8px 0; border: 1px solid #dddddd; font-size: 13.3px; text-align: right; font-weight: 500; padding-right: 10px;">
+                         style="padding: 8px 0; border: 1px solid #dddddd; font-size: 13.3px; text-align: right; font-weight: 500; padding-right: 10px;">
                         ${templateData.gst}</td>
                 </tr>
             `;
@@ -359,7 +354,6 @@ export class QuoteGeneratorService {
                     fabricClass = 'bg-light-filter';
                 } else if (item.fabricType === 'SN') {
                     fabricClass = 'bg-screen';
-
                 } else if (['B1', 'B2', 'B3', 'B4', 'B5'].includes(item.fabricType)) {
                     fabricClass = 'bg-blockout';
                 }
@@ -371,19 +365,16 @@ export class QuoteGeneratorService {
                     const isEmpty = !content;
                     const finalClass = `${cssClass} ${isEmpty ? 'is-empty-cell' : ''}`.trim();
                     return `<td data-label="${dataLabel}" class="${finalClass}">${content}</td>`;
-
                 };
 
                 const cells = [
                     cell('#', index + 1, 'text-center'),
                     cell('F-NAME', item.fabric || '', fabricClass),
                     cell('F-COLOR', item.color || '', fabricClass),
-
                     cell('Location', item.location || ''),
-                    cell('HD', item.winder === 'HD' ? '✔' : '', 'text-center'),
-                    cell('Dual', item.dual === 'D' ? '✔' : '', 'text-center'),
-
-                    cell('Motor', item.motor ? '✔' : '', 'text-center'),
+                    cell('HD', item.winder === 'HD' ? '?? : '', 'text - center'),
+                    cell('Dual', item.dual === 'D' ? '?? : '', 'text - center'),
+                    cell('Motor', item.motor ? '?? : '', 'text - center'),
                     cell('Price', `$${finalPrice.toFixed(2)}`, 'text-right')
                 ].join('');
 
@@ -394,29 +385,24 @@ export class QuoteGeneratorService {
         return `
             <table class="detailed-list-table">
                 <colgroup>
-      
                     <col style="width: 5%;">
                     <col style="width: 20%;">
                     <col style="width: 15%;">
                     <col style="width: 12%;">
-               
                     <col style="width: 9%;">
                     <col style="width: 9%;">
                     <col style="width: 9%;">
                     <col style="width: 13%;">
                 </colgroup>
-        
                 <thead>
                     <tr class="table-title">
                         <th colspan="${headers.length}">Roller Blinds - Detailed List</th>
                     </tr>
-                   
                     <tr>
                         ${headers.map(h => `<th>${h}</th>`).join('')}
                     </tr>
                 </thead>
                 <tbody>
-                  
                     ${rows}
                 </tbody>
             </table>
@@ -433,8 +419,8 @@ export class QuoteGeneratorService {
         const createRow = (number, description, qty, price, discountedPrice, isExcluded = false) => {
             const priceStyle = isExcluded ? 'style="text-decoration: line-through; color: #999999;"' : '';
             const discountedPriceValue = isExcluded ? 0 : discountedPrice;
-            // [MODIFIED] Show red only if discount is applied
-            const discountedPriceStyle = (discountedPrice < price) ? 'style="font-weight: bold; color: #d32f2f;"' : '';
+            // [MODIFIED v6291] 問題 1: 移除 discountedPriceStyle 中的紅色
+            const discountedPriceStyle = (discountedPrice < price) ? 'style="font-weight: bold;"' : '';
 
             return `
                 <tr>
@@ -463,6 +449,7 @@ export class QuoteGeneratorService {
         ));
 
         // Row 2: Accessories (Optional)
+        // [註] 問題 4: isExcluded 為 false，Price 欄位不會有刪除線
         if (summaryData.acceSum > 0) {
             rows.push(createRow(
                 itemNumber++,
@@ -474,10 +461,11 @@ export class QuoteGeneratorService {
         }
 
         // Row 3: Motorised (Optional)
+        // [MODIFIED v6291] 問題 2 & 5: 改名，且 isExcluded 為 false，Price 欄位不會有刪除線
         if (summaryData.eAcceSum > 0) {
             rows.push(createRow(
                 itemNumber++,
-                'Motorised Accessories',
+                'Motorised Package',
                 'NA',
                 summaryData.eAcceSum || 0,
                 summaryData.eAcceSum || 0
@@ -485,6 +473,7 @@ export class QuoteGeneratorService {
         }
 
         // Row 4: Delivery
+        // [註] 問題 6: 此處邏輯已正確。isExcluded 會傳入 deliveryExcluded
         const deliveryExcluded = uiState.f2.deliveryFeeExcluded;
         rows.push(createRow(
             itemNumber++,
@@ -496,6 +485,7 @@ export class QuoteGeneratorService {
         ));
 
         // Row 5: Installation
+        // [註] 問題 7: 此處邏輯已正確。isExcluded 會傳入 installExcluded
         const installExcluded = uiState.f2.installFeeExcluded;
         rows.push(createRow(
             itemNumber++,
@@ -507,6 +497,7 @@ export class QuoteGeneratorService {
         ));
 
         // Row 6: Removal
+        // [註] 問題 8: 此處邏輯已正確。isExcluded 會傳入 removalExcluded
         const removalExcluded = uiState.f2.removalFeeExcluded;
         rows.push(createRow(
             itemNumber++,

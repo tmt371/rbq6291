@@ -7,15 +7,15 @@
 
     <title>{{documentTitle}}</title>
     <style>
-        /* --- 通用樣式 --- */
+        /* --- ?šç”¨æ¨?? --- */
         :root {
             --primary-color: #1a237e;
-            /* 深藍 */
+            /* æ·±è? */
             --border-color: #e0e0e0;
-            /* 淺灰 */
+            /* æ·ºç ° */
             --text-color: #333;
             --success-color: #2e7d32;
-            /* 綠色，用於折扣 */
+            /* ç¶ è‰²ï¼Œç”¨?¼æ???*/
             --icon-color: #888888;
 
         }
@@ -44,7 +44,7 @@
             border-radius: 8px;
         }
 
-        /* --- 頁首 Header --- */
+        /* --- ? é? Header --- */
         .header {
             display: flex;
             justify-content: space-between;
@@ -55,7 +55,7 @@
             margin-bottom: 30px;
         }
 
-        /* 公司資訊 */
+        /* ?¬å ¸è³‡è? */
         .company-details {
             text-align: right;
         }
@@ -76,7 +76,7 @@
             justify-content: flex-end;
         }
 
-        /* 報價資訊 */
+        /* ?±åƒ¹è³‡è? */
         .quotation-meta {
             text-align: left;
         }
@@ -86,7 +86,7 @@
             margin: 0 0 20px 0;
             font-size: 24px;
             color: #B22222;
-            /* Brick Red 磚紅色 */
+            /* Brick Red ç£šç???*/
         }
 
         .quotation-meta p {
@@ -116,7 +116,7 @@
             padding-right: 28px;
         }
 
-        /* --- 客戶資訊 --- */
+        /* --- å®¢æˆ¶è³‡è? --- */
         .customer-info {
             margin-bottom: 40px;
         }
@@ -127,7 +127,7 @@
             line-height: 1.6;
         }
 
-        /* --- 報價表格 --- */
+        /* --- ?±åƒ¹è¡¨æ ¼ --- */
         .items-table {
             width: 100%;
             border-collapse: collapse;
@@ -185,7 +185,8 @@
 
         .items-table .discounted-price {
             font-weight: bold;
-            color: #d32f2f;
+            /* [MODIFIED v6291] 問題 1: 移除紅色 */
+            /* color: #d32f2f; */
         }
 
         .items-table .is-excluded {
@@ -199,12 +200,12 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* --- 總結 --- */
+        /* --- ç¸½ç? --- */
         .summary-section {
             display: flex;
             justify-content: flex-end;
-            /* [MODIFIED v6290 Task 3] Added Red border */
-            border: 2px solid #c0392b;
+            /* [MODIFIED v6291] 問題 9: 紅框改成粉紅框 */
+            border: 2px solid #FFC0CB;
             border-radius: 4px;
             padding: 6px 20px 20px 20px;
             width: 100%;
@@ -263,21 +264,26 @@
         .summary-payment-wrapper {
             width: 100%;
             border-collapse: collapse;
+            /* [NEW v6291] 問題 10.A: 加上灰框 */
+            border: 1px solid #cccccc;
+            border-radius: 4px;
         }
 
         /* [MODIFIED v6290 Task 1] Desktop gap logic */
         .summary-payment-wrapper .layout-cell {
             vertical-align: top;
+            /* [NEW v6291] 問題 10.B: 加大間距 */
+            padding: 10px;
         }
 
         .summary-payment-wrapper .layout-cell-summary {
-            padding-left: 10px;
-            /* Gap on the left */
+            /* [REMOVED v6291] 問題 10.B: 移除單邊 padding */
+            /* padding-left: 10px; */
         }
 
         .summary-payment-wrapper .layout-cell-payment {
-            padding-right: 10px;
-            /* Gap on the right */
+            /* [REMOVED v6291] 問題 10.B: 移除單邊 padding */
+            /* padding-right: 10px; */
         }
 
 
@@ -285,8 +291,8 @@
             width: 100%;
             margin-top: 0;
             box-sizing: border-box;
-            /* [MODIFIED v6290 Task 4] Added Blue border */
-            border: 2px solid var(--primary-color);
+            /* [MODIFIED v6291] 問題 9: 深藍框改成淡藍框 */
+            border: 2px solid #ADD8E6;
             border-radius: 4px;
             padding: 20px;
         }
@@ -436,7 +442,7 @@
                 align-items: stretch;
             }
 
-            /* [MODIFIED v6290 Task 2] Swapped order */
+            /* [MODIFIED v6290 Task 2] */
             .quotation-meta {
                 order: 2;
             }
@@ -464,10 +470,16 @@
             }
 
             .company-details .icon {
+                /* [MODIFIED v6291] 手機問題 1: 圖標強制放右側 */
+                order: 1;
+                margin-left: 8px;
+                margin-right: 0;
+            }
 
-                order: -1;
-                margin-left: 0;
-                margin-right: 8px;
+            /* [NEW v6291] 手機問題 7: 反轉金額與付款資訊的順序 */
+            .summary-payment-wrapper tr {
+                display: flex;
+                flex-direction: column-reverse;
             }
 
             /* [MODIFIED v6290 Task 2] Swapped layout-cell order logic */
@@ -618,17 +630,17 @@
 
             /* --- [NEW] Print Override for Mobile Card View --- */
             /* This block is from the previous analysis (Task 3) */
-            /* 強制恢復表格佈局 */
+            /* å¼·åˆ¶?¢å¾©è¡¨æ ¼ä½ˆå? */
             .items-table {
                 display: table !important;
                 table-layout: fixed !important;
-                /* 確保表格寬度正確 */
+                /* ç¢ºä?è¡¨æ ¼å¯¬åº¦æ­?¢º */
             }
 
-            /* 強制顯示表格標頭 */
+            /* å¼·åˆ¶é¡¯ç¤ºè¡¨æ ¼æ¨™é ­ */
             .items-table thead {
                 display: table-header-group !important;
-                /* 重置隱藏樣式 */
+                /* ? ç½®?±è?æ¨?? */
                 position: static !important;
                 height: auto !important;
                 margin: 0 !important;
@@ -636,29 +648,29 @@
                 width: auto !important;
             }
 
-            /* 強制恢復表格行 */
+            /* å¼·åˆ¶?¢å¾©è¡¨æ ¼è¡?*/
             .items-table tr {
                 display: table-row !important;
                 margin-bottom: 0 !important;
                 border: 1px solid #333 !important;
-                /* 恢復列印時的邊框 */
+                /* ?¢å¾©?—å °?‚ç??Šæ? */
                 box-shadow: none !important;
                 min-width: 0 !important;
                 /* [FIX] Reset min-width for print */
             }
 
-            /* 強制恢復表格儲存格 */
+            /* å¼·åˆ¶?¢å¾©è¡¨æ ¼?²å???*/
             .items-table td {
                 display: table-cell !important;
                 justify-content: flex-start !important;
-                /* 恢復預設 */
+                /* ?¢å¾©? è¨­ */
                 padding: 10px 12px !important;
-                /* 恢復內距 */
+                /* ?¢å¾©?§è? */
                 border-bottom: 1px solid #333 !important;
-                /* 恢復列印時的邊框 */
+                /* ?¢å¾©?—å °?‚ç??Šæ? */
             }
 
-            /* 強制隱藏卡片模式的標籤 */
+            /* å¼·åˆ¶?±è??¡ç?æ¨¡å??„æ?ç±?*/
             .items-table td:before {
                 content: none !important;
                 display: none !important;
@@ -684,7 +696,6 @@
                     <h2>QUOTATION</h2>
                     <p><strong>Quote No:</strong> {{quoteId}}</p>
                     <p><strong>Issue Date:</strong> {{issueDate}}</p>
-
                     <p><strong>Due Date:</strong> {{dueDate}}</p>
                 </div>
                 <div class="company-details">
@@ -772,7 +783,7 @@
                                                 </tr>
                                                 <tr class="grand-total">
                                                     <td class="summary-label">Our Offer</td>
-                                                    <td class="summary-value">{{grandTotal}}</td>
+                                                    <td class="summary-value">{{ourOffer}}</td>
                                                 </tr>
 
                                                 {{{gstRowHtml}}}
