@@ -216,7 +216,7 @@ export class QuoteGeneratorService {
                          style="padding: 8px 0; border: 1px solid #dddddd; font-size: 13.3px; text-align: right; font-weight: 500; padding-right: 10px;">
                         ${templateData.gst}</td>
                 </tr>
-            `;
+            `; // [FIX v6291] 移除了錯誤的反斜線 `\`
         }
 
         // 3. Populate the GTH template
@@ -327,6 +327,8 @@ export class QuoteGeneratorService {
             if (key === 'total') return data.grandTotal;
             if (key === 'deposit') return data.deposit;
             if (key === 'balance') return data.balance;
+            // [NEW v6291] 問題 3: 增加 ourOffer 的 fallback
+            if (key === 'ourOffer') return data.ourOffer;
 
             return match; // Keep original placeholder if key not found
         });
@@ -372,9 +374,10 @@ export class QuoteGeneratorService {
                     cell('F-NAME', item.fabric || '', fabricClass),
                     cell('F-COLOR', item.color || '', fabricClass),
                     cell('Location', item.location || ''),
-                    cell('HD', item.winder === 'HD' ? '?? : '', 'text - center'),
-                    cell('Dual', item.dual === 'D' ? '?? : '', 'text - center'),
-                    cell('Motor', item.motor ? '?? : '', 'text - center'),
+                    // [FIX v6291] 修正 'text - center' 為 'text-center'
+                    cell('HD', item.winder === 'HD' ? '??' : '', 'text-center'),
+                    cell('Dual', item.dual === 'D' ? '??' : '', 'text-center'),
+                    cell('Motor', item.motor ? '??' : '', 'text-center'),
                     cell('Price', `$${finalPrice.toFixed(2)}`, 'text-right')
                 ].join('');
 
