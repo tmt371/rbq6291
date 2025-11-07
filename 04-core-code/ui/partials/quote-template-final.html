@@ -185,8 +185,8 @@
 
         .items-table .discounted-price {
             font-weight: bold;
-            /* [MODIFIED v6291] 問題 1: 移除紅色 */
-            /* color: #d32f2f; */
+            /* [FIX v6291] 問題 4: 重新加上紅色 */
+            color: #d32f2f;
         }
 
         .items-table .is-excluded {
@@ -201,6 +201,25 @@
         }
 
         /* --- ç¸½ç? --- */
+        /* [FIX v6291] 問題 6: 恢復使用 table 佈局，並添加灰框與 padding */
+        .summary-payment-wrapper {
+            width: 100%;
+            border-collapse: separate; /* 改為 separate 以允許 border-spacing */
+            margin-top: 30px;
+            /* [FIX v6291] 問題 10.A: 加上灰框 */
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            /* [FIX v6291] 問題 10.B: 使用 border-spacing 加大間距 */
+            border-spacing: 10px;
+        }
+
+        .summary-payment-wrapper .layout-cell {
+            vertical-align: top;
+            width: 50%; /* 確保兩欄等寬 */
+            padding: 0; /* 移除第 1 次編修的 padding */
+        }
+
+
         .summary-section {
             display: flex;
             justify-content: flex-end;
@@ -210,6 +229,7 @@
             padding: 6px 20px 20px 20px;
             width: 100%;
             box-sizing: border-box;
+            height: 100%; /* [FIX v6291] 問題 6: 確保高度一致 */
         }
 
         .summary-details {
@@ -261,32 +281,6 @@
             font-weight: bold;
         }
 
-        .summary-payment-wrapper {
-            width: 100%;
-            border-collapse: collapse;
-            /* [NEW v6291] 問題 10.A: 加上灰框 */
-            border: 1px solid #cccccc;
-            border-radius: 4px;
-        }
-
-        /* [MODIFIED v6290 Task 1] Desktop gap logic */
-        .summary-payment-wrapper .layout-cell {
-            vertical-align: top;
-            /* [NEW v6291] 問題 10.B: 加大間距 */
-            padding: 10px;
-        }
-
-        .summary-payment-wrapper .layout-cell-summary {
-            /* [REMOVED v6291] 問題 10.B: 移除單邊 padding */
-            /* padding-left: 10px; */
-        }
-
-        .summary-payment-wrapper .layout-cell-payment {
-            /* [REMOVED v6291] 問題 10.B: 移除單邊 padding */
-            /* padding-right: 10px; */
-        }
-
-
         .payment-info {
             width: 100%;
             margin-top: 0;
@@ -295,6 +289,7 @@
             border: 2px solid #ADD8E6;
             border-radius: 4px;
             padding: 20px;
+            height: 100%; /* [FIX v6291] 問題 6: 確保高度一致 */
         }
 
         .payment-info h4 {
@@ -309,7 +304,6 @@
 
 
         .payment-table {
-
             width: 100%;
             border-collapse: collapse;
             font-size: 1em;
@@ -319,44 +313,27 @@
             /* [MODIFIED] Removed table border */
         }
 
+        /* [FIX v6291] 問題 6: 調整 payment-table 的邊框和 padding */
         .payment-table td {
-            padding: 6px 0;
-            border-bottom: 1px solid lightblue;
-        }
-
-        .payment-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .payment-table .payid-row td {
-            border-bottom: none;
-            /* PayID row has no bottom border */
-        }
-
-        .payment-table .payid-row {
-            background-color: #f5f5f5;
+            padding: 6px 10px; /* 增加左右 padding */
+            border-bottom: 1px solid #dddddd; /* 使用細灰邊框 */
+            text-align: left; /* 預設文字靠左 */
         }
 
         .payment-table td:first-child {
             font-weight: bold;
-            width: 80px;
+            width: 80px; /* 保持標籤固定寬度 */
             text-align: right;
-            padding-right: 2px;
+            border-left: 1px solid #dddddd; /* 補上左邊框 */
         }
 
         .payment-table td:nth-child(2) {
             text-align: left;
-            padding-left: 4px;
-            border-left: 1px solid var(--border-color);
+            border-left: 1px solid #dddddd; /* 確保中間有分隔線 */
+            border-right: 1px solid #dddddd; /* 補上右邊框 */
         }
-
-        .payment-info strong {
-
-            display: inline-block;
-            width: 80px;
-        }
-
-        /* [NEW v6290 Task 2] New styles for payment block */
+        
+        /* [FIX v6291] 問題 6: 修正 payment-group-border 的樣式 */
         .payment-group-border {
             border: 1px solid #b0b8c4;
             /* Softer border */
@@ -364,6 +341,41 @@
             margin-top: 10px;
             overflow: hidden;
             /* To clip the table corners */
+        }
+        /* [FIX v6291] 問題 6: 確保 group-border 內的表格邊框正確 */
+        .payment-group-border .payment-table td {
+             border-left: none;
+             border-right: none;
+        }
+        .payment-group-border .payment-table td:first-child {
+             border-left: none;
+             padding-right: 10px;
+        }
+        .payment-group-border .payment-table td:nth-child(2) {
+             border-left: 1px solid #dddddd;
+             border-right: none;
+        }
+        .payment-group-border .payment-table tr:last-child td {
+             border-bottom: none; /* 移除最後一行的下邊框 */
+        }
+
+
+        .payment-table .payid-row td {
+            border-bottom: 1px solid #dddddd;
+        }
+        .payment-table .payid-row:last-child td {
+             border-bottom: none;
+        }
+
+
+        .payment-table .payid-row {
+            background-color: #f5f5f5;
+        }
+
+        .payment-info strong {
+
+            display: inline-block;
+            width: 80px;
         }
 
         .payid-separator {
@@ -476,13 +488,16 @@
                 margin-right: 0;
             }
 
-            /* [NEW v6291] 手機問題 7: 反轉金額與付款資訊的順序 */
-            .summary-payment-wrapper tr {
-                display: flex;
-                flex-direction: column-reverse;
+            /* [FIX v6291] 問題 6 & 手機問題 7: 調整手機版佈局 */
+            .summary-payment-wrapper {
+                display: flex; /* 改回 flex */
+                flex-direction: column-reverse; /* 反轉順序 */
+                gap: 20px; /* 手機版間距 */
+                padding: 0; /* 手機版移除外層 padding */
+                border: none; /* 手機版移除外層邊框 */
+                border-spacing: 0; /* 移除桌面版間距 */
             }
 
-            /* [MODIFIED v6290 Task 2] Swapped layout-cell order logic */
             .summary-payment-wrapper .layout-cell {
                 display: block;
                 width: 100%;
@@ -493,7 +508,7 @@
 
             /* [MODIFIED v6290 Task 2] Space now goes AFTER the summary (which is first) */
             .summary-payment-wrapper .layout-cell-summary {
-                margin-bottom: 20px;
+                margin-bottom: 0; /* [FIX v6291] 已由 gap 取代 */
                 padding-right: 0 !important;
                 /* Reset desktop gap */
             }
@@ -511,6 +526,7 @@
                 box-sizing: border-box;
                 min-width: 280px;
                 /* X */
+                height: auto; /* [FIX v6291] 移除固定高度 */
             }
 
             /* [MODIFIED v6290 Task 4] Added min-width and box-sizing */
@@ -627,6 +643,19 @@
             .summary-payment-wrapper tr {
                 page-break-inside: avoid;
             }
+            
+            /* [FIX v6291] 問題 6: 確保列印時佈局正確 */
+            .summary-payment-wrapper {
+                display: table;
+                border-spacing: 10px;
+                border: 1px solid #cccccc;
+            }
+            .summary-payment-wrapper .layout-cell {
+                 display: table-cell;
+                 width: 50%;
+                 padding: 10px;
+            }
+
 
             /* --- [NEW] Print Override for Mobile Card View --- */
             /* This block is from the previous analysis (Task 3) */
@@ -696,142 +725,4 @@
                     <h2>QUOTATION</h2>
                     <p><strong>Quote No:</strong> {{quoteId}}</p>
                     <p><strong>Issue Date:</strong> {{issueDate}}</p>
-                    <p><strong>Due Date:</strong> {{dueDate}}</p>
-                </div>
-                <div class="company-details">
-                    <h1>EZ Blinds & Shutters</h1>
-                    <p class="abn-line">ABN: 52 62 74
-                        20 777</p>
-                    <p>U11 / 271 Wells Rd, Chelsea Heights<span class="icon">&#128205;</span></p>
-                    <p>
-                        <span>0466 965 168<span class="icon">&#128222;</span></span>
-                    </p>
-                    <p>
-                        <span>ezblinds@ezbns.com.au<span class="icon">&#128231;</span></span>
-                    </p>
-                    <p>www.ezbns.com.au<span class="icon">&#127760;</span></p>
-                </div>
-
-            </header>
-
-            <main>
-                <section class="customer-info">
-                    <p>{{{customerInfoHtml}}}</p>
-                </section>
-
-                <section class="items-section">
-
-                    <div class="table-scroll-wrapper">
-                        {{{itemsTableBody}}}
-                    </div>
-                </section>
-                <table class="summary-payment-wrapper" border="0" cellpadding="0" cellspacing="0" width="100%">
-                    <tbody>
-                        <tr>
-                            <td class="layout-cell layout-cell-payment" width="50%">
-                                <section class="payment-info">
-                                    <h4>Payment Method</h4>
-
-                                    <div class="payment-group-border">
-                                        <table class="payment-table">
-                                            <tbody>
-                                                <tr>
-                                                    <td>Bank</td>
-                                                    <td>CBA</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>BSB</td>
-                                                    <td>0 6 2 &nbsp;&nbsp; 6 9 2</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Account</td>
-                                                    <td>4 5 7 0 &nbsp;&nbsp; 8 8 7 7</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Name</td>
-                                                    <td>Alphalead &nbsp;Pty &nbsp;Ltd</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <p class="payid-separator">Or, pay securely via our ACN PayID.</p>
-
-                                    <div class="payment-group-border">
-                                        <table class="payment-table">
-                                            <tbody>
-                                                <tr class="payid-row">
-                                                    <td>PayID</td>
-                                                    <td>6 2 7 &nbsp;&nbsp; 4 2 0 &nbsp;&nbsp; 7 7 7</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <p class="payment-reference-text"><em>Please leave your Ph. number as Ref. in the
-                                            transaction.</em></p>
-                                </section>
-                            </td>
-                            <td class="layout-cell layout-cell-summary" width="50%">
-                                <section class="summary-section">
-                                    <div class="summary-details">
-                                        <table>
-                                            <tbody>
-                                                <tr>
-                                                    <td class="summary-label">Subtotal</td>
-                                                    <td class="summary-value">{{subtotal}}</td>
-                                                </tr>
-                                                <tr class="grand-total">
-                                                    <td class="summary-label">Our Offer</td>
-                                                    <td class="summary-value">{{ourOffer}}</td>
-                                                </tr>
-
-                                                {{{gstRowHtml}}}
-
-                                                <tr class="grand-total" style="color: #FF69B4; border-color: #FF69B4;">
-                                                    <td class="summary-label" style="color: #FF69B4;">Total</td>
-                                                    <td class="summary-value" style="color: #FF69B4;">{{grandTotal}}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="summary-label">Deposit</td>
-                                                    <td class="summary-value">{{deposit}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="summary-label"><strong>Balance</strong></td>
-                                                    <td class="summary-value"><strong>{{balance}}</strong></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
-                                    </div>
-                                </section>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <section class="notes-terms-box">
-                    <h4>General Notes</h4>
-
-                    <p>{{{generalNotes}}}</p>
-                </section>
-
-                <section class="terms notes-terms-box">
-                    <h4>Terms & Conditions</h4>
-                    {{{termsAndConditions}}}
-
-                </section>
-
-            </main>
-
-            <footer class="footer">
-                <p>Thank you for your business!</p>
-                <p><strong>EZ Blinds & Shutters</strong></p>
-            </footer>
-
-        </div>
-    </div>
-</body>
-
-</html>
+                    <p><strong>Due Date:</strong> {{dueDate

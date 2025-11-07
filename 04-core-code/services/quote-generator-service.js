@@ -202,6 +202,7 @@ export class QuoteGeneratorService {
         }
 
         // 1. Get common data
+        // [MODIFIED v6291] 問題 5: getQuoteTemplateData 現在會返回 ourOffer
         const templateData = this.calculationService.getQuoteTemplateData(quoteData, ui, f3Data);
 
         // 2. [NEW v6290 Task 2] Conditionally create the GST row HTML
@@ -226,6 +227,7 @@ export class QuoteGeneratorService {
             total: templateData.grandTotal,
             deposit: templateData.deposit,
             balance: templateData.balance,
+            ourOffer: templateData.ourOffer, // [FIX v6291] 問題 5: 確保 ourOffer 被傳遞
 
             // Ensure customer info is formatted
             customerInfoHtml: this._formatCustomerInfo(templateData),
@@ -259,6 +261,7 @@ export class QuoteGeneratorService {
         }
 
         // 1. Delegate all data preparation to CalculationService.
+        // [MODIFIED v6291] 問題 5: getQuoteTemplateData 現在會返回 ourOffer
         const templateData = this.calculationService.getQuoteTemplateData(quoteData, ui, f3Data);
 
         // 2. [NEW v6290 Task 2] Conditionally create the GST row HTML for the *Original Table*
@@ -327,7 +330,7 @@ export class QuoteGeneratorService {
             if (key === 'total') return data.grandTotal;
             if (key === 'deposit') return data.deposit;
             if (key === 'balance') return data.balance;
-            // [NEW v6291] 問題 3: 增加 ourOffer 的 fallback
+            // [NEW v6291] 問題 5: 增加 ourOffer 的 fallback
             if (key === 'ourOffer') return data.ourOffer;
 
             return match; // Keep original placeholder if key not found
@@ -421,9 +424,10 @@ export class QuoteGeneratorService {
 
         const createRow = (number, description, qty, price, discountedPrice, isExcluded = false) => {
             const priceStyle = isExcluded ? 'style="text-decoration: line-through; color: #999999;"' : '';
+            // [FIX v6291] 問題 3: 如果 Price 被排除，Discounted Price 應為 0
             const discountedPriceValue = isExcluded ? 0 : discountedPrice;
-            // [MODIFIED v6291] 問題 1: 移除 discountedPriceStyle 中的紅色
-            const discountedPriceStyle = (discountedPrice < price) ? 'style="font-weight: bold;"' : '';
+            // [FIX v6291] 問題 4: 保持 Discounted Price 的樣式邏輯 (紅色將由 CSS 添加)
+            const discountedPriceStyle = (discountedPriceValue < price && !isExcluded) ? 'style="font-weight: bold;"' : '';
 
             return `
                 <tr>
@@ -434,244 +438,4 @@ export class QuoteGeneratorService {
                         <span class="original-price" ${priceStyle}>$${price.toFixed(2)}</span>
                     </td>
                     <td data-label="Discounted Price" class="align-right">
-                        <span class="discounted-price" ${discountedPriceStyle}>$${discountedPriceValue.toFixed(2)}</span>
-                    </td>
-                </tr>
-            `;
-        };
-
-        let itemNumber = 1;
-
-        // Row 1: Roller Blinds
-        rows.push(createRow(
-            itemNumber++,
-            'Roller Blinds',
-            validItemCount,
-            summaryData.firstRbPrice || 0,
-            summaryData.disRbPrice || 0
-        ));
-
-        // Row 2: Accessories (Optional)
-        // [註] 問題 4: isExcluded 為 false，Price 欄位不會有刪除線
-        if (summaryData.acceSum > 0) {
-            rows.push(createRow(
-                itemNumber++,
-                'Installation Accessories',
-                'NA',
-                summaryData.acceSum || 0,
-                summaryData.acceSum || 0
-            ));
-        }
-
-        // Row 3: Motorised (Optional)
-        // [MODIFIED v6291] 問題 2 & 5: 改名，且 isExcluded 為 false，Price 欄位不會有刪除線
-        if (summaryData.eAcceSum > 0) {
-            rows.push(createRow(
-                itemNumber++,
-                'Motorised Package',
-                'NA',
-                summaryData.eAcceSum || 0,
-                summaryData.eAcceSum || 0
-            ));
-        }
-
-        // Row 4: Delivery
-        // [註] 問題 6: 此處邏輯已正確。isExcluded 會傳入 deliveryExcluded
-        const deliveryExcluded = uiState.f2.deliveryFeeExcluded;
-        rows.push(createRow(
-            itemNumber++,
-            'Delivery',
-            uiState.f2.deliveryQty || 1,
-            summaryData.deliveryFee || 0,
-            summaryData.deliveryFee || 0,
-            deliveryExcluded
-        ));
-
-        // Row 5: Installation
-        // [註] 問題 7: 此處邏輯已正確。isExcluded 會傳入 installExcluded
-        const installExcluded = uiState.f2.installFeeExcluded;
-        rows.push(createRow(
-            itemNumber++,
-            'Installation',
-            uiState.f2.installQty || 0, // Use installQty from F2 state
-            summaryData.installFee || 0,
-            summaryData.installFee || 0,
-            installExcluded
-        ));
-
-        // Row 6: Removal
-        // [註] 問題 8: 此處邏輯已正確。isExcluded 會傳入 removalExcluded
-        const removalExcluded = uiState.f2.removalFeeExcluded;
-        rows.push(createRow(
-            itemNumber++,
-            'Removal',
-            uiState.f2.removalQty || 0,
-            summaryData.removalFee || 0,
-            summaryData.removalFee || 0,
-            removalExcluded
-        ));
-
-        // Return the full table structure
-        return `
-            <table class="items-table" border="1" cellpadding="0" cellspacing="0"> 
-                <colgroup>
-                    <col style="width: 8%;"> 
-                    <col style="width: 42%;">
-                    <col style="width: 15%;">
-                    <col style="width: 17.5%;"> 
-                    <col style="width: 17.5%;">
-                </colgroup> 
-                <thead>
-                    <tr>
-                        <th>NO</th> 
-                        <th>Description</th>
-                        <th class="align-right">QTY</th> 
-                        <th class="align-right">Price</th>
-                        <th class="align-right">Discounted Price</th> 
-                    </tr>
-                </thead> 
-                <tbody>
-                    ${rows.join('')}
-                </tbody> 
-            </table>
-        `;
-    }
-
-    // [NEW v6290 Task 1] This is the restored function for GTH
-    // It generates MULTIPLE tables (cards)
-    _generatePageOneItemsTableHtml_GTH(templateData) {
-        const { summaryData, uiState, items } = templateData;
-        const rows = [];
-        const validItemCount = items.filter(i => i.width && i.height).length;
-
-        // [MODIFIED v6290] Use new helper function to build rows
-        const createRow = (number, description, qty, price, discountedPrice, isExcluded = false) => {
-            const priceStyle = isExcluded ? 'style="text-decoration: line-through; color: #999999;"' : '';
-            const discountedPriceValue = isExcluded ? 0 : discountedPrice;
-            // [MODIFIED] Show red only if discount is applied
-            const discountedPriceStyle = (discountedPrice < price) ? 'style="font-weight: bold; color: #d32f2f;"' : '';
-
-            return `
-                <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"
-                    style="border-collapse: collapse; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                    <tbody>
-                        <tr>
-                            <td
-                                style="padding: 10px 15px; border-bottom: 1px solid #e0e0e0; background-color: #1a237e; color: white; border-radius: 4px 4px 0 0;">
-                                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="color: white;">
-                                    <tr>
-                                        <td width="50%" valign="top" style="text-align: left; font-weight: bold;">#${number}</td>
-                                        <td width="50%" valign="top" style="text-align: right; font-weight: normal;">${description}</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 10px 15px; border-bottom: 1px solid #e0e0e0;">
-                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                                    <tr>
-                                        <td width="50%" valign="top" style="text-align: left; font-weight: 600;">QTY</td>
-                                        <td width="50%" valign="top" style="text-align: right;">${qty}</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 10px 15px; border-bottom: 1px solid #e0e0e0;">
-                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                                    <tr>
-                                        <td width="50%" valign="top" style="text-align: left; font-weight: 600;">Price</td>
-                                        <td width="50%" valign="top" style="text-align: right;">
-                                            <span ${priceStyle}>$${price.toFixed(2)}</span>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 10px 15px;">
-                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                                    <tr>
-                                        <td width="50%" valign="top" style="text-align: left; font-weight: 600;">Discounted Price</td>
-                                        <td width="50%" valign="top" style="text-align: right;">
-                                            <span ${discountedPriceStyle}>$${discountedPriceValue.toFixed(2)}</span>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            `;
-        };
-
-        let itemNumber = 1;
-
-        // Row 1: Roller Blinds
-        rows.push(createRow(
-            itemNumber++,
-            'Roller Blinds',
-            validItemCount,
-            summaryData.firstRbPrice || 0,
-            summaryData.disRbPrice || 0
-        ));
-
-        // Row 2: Accessories (Optional)
-        if (summaryData.acceSum > 0) {
-            rows.push(createRow(
-                itemNumber++,
-                'Installation Accessories',
-                'NA',
-                summaryData.acceSum || 0,
-                summaryData.acceSum || 0
-            ));
-        }
-
-        // Row 3: Motorised (Optional)
-        if (summaryData.eAcceSum > 0) {
-            rows.push(createRow(
-                itemNumber++,
-                'Motorised Accessories',
-                'NA',
-                summaryData.eAcceSum || 0,
-                summaryData.eAcceSum || 0
-            ));
-        }
-
-        // Row 4: Delivery
-        const deliveryExcluded = uiState.f2.deliveryFeeExcluded;
-        rows.push(createRow(
-            itemNumber++,
-            'Delivery',
-            uiState.f2.deliveryQty || 1,
-            summaryData.deliveryFee || 0,
-            summaryData.deliveryFee || 0,
-            deliveryExcluded
-        ));
-
-        // Row 5: Installation
-        // [MODIFIED v6290 Bug 1 Fix]
-        const installExcluded = uiState.f2.installFeeExcluded;
-        rows.push(createRow(
-            itemNumber++,
-            'Installation',
-            uiState.f2.installQty || 0, // Use installQty from F2 state
-            summaryData.installFee || 0,
-            summaryData.installFee || 0,
-            installExcluded
-        ));
-
-        // Row 6: Removal
-        const removalExcluded = uiState.f2.removalFeeExcluded;
-        rows.push(createRow(
-            itemNumber++,
-            'Removal',
-            uiState.f2.removalQty || 0,
-            summaryData.removalFee || 0,
-            summaryData.removalFee || 0,
-            removalExcluded
-        ));
-
-        return rows.join('');
-    }
-}
+                        <span class="discounted-price" ${discountedPriceStyle}>$${discoun
