@@ -280,6 +280,7 @@ export class QuoteGeneratorService {
             ...templateData,
             customerInfoHtml: this._formatCustomerInfo(templateData),
             // [MODIFIED v6290 Task 1] Use the single-table generator
+            // [FIX v6291] (問題 1, 2) 此函式現在只返回 <tr>...</tr>
             itemsTableBody: this._generatePageOneItemsTableHtml_Original(templateData),
             rollerBlindsTable: this._generateItemsTableHtml(templateData),
             gstRowHtml: gstRowHtml // [NEW] Pass the conditional GST row
@@ -423,12 +424,17 @@ export class QuoteGeneratorService {
         const validItemCount = items.filter(i => i.width && i.height).length;
 
         const createRow = (number, description, qty, price, discountedPrice, isExcluded = false) => {
-            const priceStyle = isExcluded ? 'style="text-decoration: line-through; color: #999999;"' : '';
             // [FIX v6291] 問題 3: 如果 Price 被排除，Discounted Price 應為 0
             const discountedPriceValue = isExcluded ? 0 : discountedPrice;
-            // [MODIFIED v6291] 問題 1: 移除 discountedPriceStyle 中的紅色 (在第 3 次編修中已移除)
-            // [FIX v6291] 問題 4: 確保有折扣時才套用樣式
-            const discountedPriceStyle = (discountedPriceValue < price) ? 'style="font-weight: bold;"' : '';
+
+            // [FIX v6291] 問題 3.C: Price is RED and strikethrough if excluded
+            const priceStyle = isExcluded ? 'style="text-decoration: line-through; color: #d32f2f;"' : '';
+
+            // [FIX v6291] 問題 3.A & 3.B: 
+            const isDiscounted = discountedPriceValue < price;
+            // 3.A: Red (由 CSS .discounted-price 處理)
+            // 3.B: Black (如果 == price, 覆蓋 CSS)
+            const discountedPriceStyle = isDiscounted ? '' : 'style="color: #333;"';
 
             return `
                 <tr>
@@ -520,30 +526,8 @@ export class QuoteGeneratorService {
             removalExcluded
         ));
 
-        // Return the full table structure
-        return `
-            <table class="items-table" border="1" cellpadding="0" cellspacing="0"> 
-                <colgroup>
-                    <col style="width: 8%;"> 
-                    <col style="width: 42%;">
-                    <col style="width: 15%;">
-                    <col style="width: 17.5%;"> 
-                    <col style="width: 17.5%;">
-                </colgroup> 
-                <thead>
-                    <tr>
-                        <th>NO</th> 
-                        <th>Description</th>
-                        <th class="align-right">QTY</th> 
-                        <th class="align-right">Price</th>
-                        <th class="align-right">Discounted Price</th> 
-                    </tr>
-                </thead> 
-                <tbody>
-                    ${rows.join('')}
-                </tbody> 
-            </table>
-        `;
+        // [FIX v6291] 問題 1, 2: 移除 <table>...</table> 包裹，只返回 <tr>
+        return rows.join('');
     }
 
     // [NEW v6290 Task 1] This is the restored function for GTH
@@ -558,8 +542,12 @@ export class QuoteGeneratorService {
             const priceStyle = isExcluded ? 'style="text-decoration: line-through; color: #999999;"' : '';
             // [FIX v6291] 問題 3: 如果 Price 被排除，Discounted Price 應為 0
             const discountedPriceValue = isExcluded ? 0 : discountedPrice;
-            // [MODIFIED v6291] 問題 4: (GTH) 確保有折扣時才套用樣式
-            const discountedPriceStyle = (discountedPriceValue < price) ? 'style="font-weight: bold; color: #d32f2f;"' : '';
+
+            // [FIX v6291] 問題 3.A & 3.B: (GTH) 
+            const isDiscounted = discountedPriceValue < price;
+            // 3.A: Red (預設)
+            // 3.B: Black (如果 == price)
+            const discountedPriceStyle = isDiscounted ? 'style="font-weight: bold; color: #d32f2f;"' : 'style="font-weight: bold; color: #333;"';
 
             return `
                 <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"
@@ -642,10 +630,11 @@ export class QuoteGeneratorService {
 
         // Row 3: Motorised Accessories (Optional)
         // [FIX v6291] 問題 2: 修正 isExcluded 參數，確保 Price 欄位沒有刪除線
+        // [MODIFIED v6291] 問題 2: 改名
         if (summaryData.eAcceSum > 0) {
             rows.push(createRow(
                 itemNumber++,
-                'Motorised Accessories',
+                'Motorised Package',
                 'NA',
                 summaryData.eAcceSum || 0,
                 summaryData.eAcceSum || 0,
