@@ -392,15 +392,7 @@ export class QuoteGeneratorService {
         return `
             <table class="detailed-list-table">
                 <colgroup>
-                    <col style="width: 5%;">
-                    <col style="width: 20%;">
-                    <col style="width: 15%;">
-                    <col style="width: 12%;">
-                    <col style="width: 9%;">
-                    <col style="width: 9%;">
-                    <col style="width: 9%;">
-                    <col style="width: 13%;">
-                </colgroup>
+                    <col style="width: 5%;">   <col style="width: 20%;"> <col style="width: 15%;"> <col style="width: 14.65%;"> <col style="width: 8.1%;">  <col style="width: 8.1%;">  <col style="width: 8.1%;">  <col style="width: 10.4%;"> </colgroup>
                 <thead>
                     <tr class="table-title">
                         <th colspan="${headers.length}">Roller Blinds - Detailed List</th>
@@ -430,18 +422,19 @@ export class QuoteGeneratorService {
 
             // [FIX v6291] (手機 PDF 問題 1.2, 1.3, 1.4) 實作新的顏色/樣式邏輯
             let priceStyle = 'style="color: #333;"'; // (1.3) 預設 Price 為黑色
-            let discountedPriceStyle = 'style="color: #333;"'; // (1.3) 預設 Discounted Price 為黑色
+            // (1.3) 預設 Discounted Price 為黑色 (CSS 會使其變紅，這裡的 style 用於覆蓋)
+            let discountedPriceStyle = 'style="color: #333;"';
 
             if (isExcluded) {
-                // (1.4) Price: 灰色刪除線, Discounted: 紅色
+                // (1.4) Price: 灰色刪除線, Discounted: 紅色 (金額為 0)
                 priceStyle = 'style="text-decoration: line-through; color: #999999;"';
                 discountedPriceStyle = 'style="color: #d32f2f;"';
             } else if (isDiscounted) {
                 // (1.2) Price: 灰色, Discounted: 紅色
                 priceStyle = 'style="color: #999999;"';
-                discountedPriceStyle = 'style="color: #d32f2f;"';
+                discountedPriceStyle = 'style="color: #d32f2f;"'; // 保持紅色 (CSS 預設)
             }
-            // (1.3) 的情況 (isExcluded = false 且 isDiscounted = false) 已在預設值中處理
+            // (1.3) 的情況 (isExcluded = false 且 isDiscounted = false) 已在預設值中處理 (兩者皆為黑色)
 
             return `
                 <tr>
