@@ -179,13 +179,13 @@
 
         .items-table .original-price {
             /* [FIX v6291] (問題 1-5) 移除此處的 text-decoration: line-through; */
-            color: #999;
+            /* color: #999; (REMOVED) - 顏色由 JS 控制 */
             font-size: 14px;
         }
 
         .items-table .discounted-price {
             font-weight: bold;
-            /* [FIX v6291] 問題 4: 重新加上紅色 */
+            /* [FIX v6291] 問題 4: 重新加上紅色 (作為預設) */
             color: #d32f2f;
         }
 
@@ -758,8 +758,8 @@
                         <table class="items-table" border="1" cellpadding="0" cellspacing="0">
                             <colgroup>
                                 <col style="width: 8%;">
-                                <col style="width: 34%;">
-                                <col style="width: 18%;">
+                                <col style="width: 37.6%;">
+                                <col style="width: 14.4%;">
                                 <col style="width: 20%;">
                                 <col style="width: 20%;">
                             </colgroup>

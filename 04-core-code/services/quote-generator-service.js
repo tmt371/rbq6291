@@ -378,10 +378,10 @@ export class QuoteGeneratorService {
                     cell('F-NAME', item.fabric || '', fabricClass),
                     cell('F-COLOR', item.color || '', fabricClass),
                     cell('Location', item.location || ''),
-                    // [FIX v6291] 修正 'text - center' 為 'text-center'
-                    cell('HD', item.winder === 'HD' ? '??' : '', 'text-center'),
-                    cell('Dual', item.dual === 'D' ? '??' : '', 'text-center'),
-                    cell('Motor', item.motor ? '??' : '', 'text-center'),
+                    // [FIX v6291] (手機 PDF 問題 2) 修正亂碼 "?? " 為 "Y"
+                    cell('HD', item.winder === 'HD' ? 'Y' : '', 'text-center'),
+                    cell('Dual', item.dual === 'D' ? 'Y' : '', 'text-center'),
+                    cell('Motor', item.motor ? 'Y' : '', 'text-center'),
                     cell('Price', `$${finalPrice.toFixed(2)}`, 'text-right')
                 ].join('');
 
@@ -426,15 +426,22 @@ export class QuoteGeneratorService {
         const createRow = (number, description, qty, price, discountedPrice, isExcluded = false) => {
             // [FIX v6291] 問題 3: 如果 Price 被排除，Discounted Price 應為 0
             const discountedPriceValue = isExcluded ? 0 : discountedPrice;
-
-            // [FIX v6291] 問題 3.C: Price is RED and strikethrough if excluded
-            const priceStyle = isExcluded ? 'style="text-decoration: line-through; color: #d32f2f;"' : '';
-
-            // [FIX v6291] 問題 3.A & 3.B: 
             const isDiscounted = discountedPriceValue < price;
-            // 3.A: Red (由 CSS .discounted-price 處理)
-            // 3.B: Black (如果 == price, 覆蓋 CSS)
-            const discountedPriceStyle = isDiscounted ? '' : 'style="color: #333;"';
+
+            // [FIX v6291] (手機 PDF 問題 1.2, 1.3, 1.4) 實作新的顏色/樣式邏輯
+            let priceStyle = 'style="color: #333;"'; // (1.3) 預設 Price 為黑色
+            let discountedPriceStyle = 'style="color: #333;"'; // (1.3) 預設 Discounted Price 為黑色
+
+            if (isExcluded) {
+                // (1.4) Price: 灰色刪除線, Discounted: 紅色
+                priceStyle = 'style="text-decoration: line-through; color: #999999;"';
+                discountedPriceStyle = 'style="color: #d32f2f;"';
+            } else if (isDiscounted) {
+                // (1.2) Price: 灰色, Discounted: 紅色
+                priceStyle = 'style="color: #999999;"';
+                discountedPriceStyle = 'style="color: #d32f2f;"';
+            }
+            // (1.3) 的情況 (isExcluded = false 且 isDiscounted = false) 已在預設值中處理
 
             return `
                 <tr>
@@ -460,7 +467,7 @@ export class QuoteGeneratorService {
             validItemCount,
             summaryData.firstRbPrice || 0,
             summaryData.disRbPrice || 0,
-            false // 確保 Roller Blinds Price 欄位沒有刪除線
+            false // 確保 Roller Blinds Price 欄位沒有刪除線 (除非有折扣)
         ));
 
         // Row 2: Installation Accessories (Optional)
@@ -539,15 +546,25 @@ export class QuoteGeneratorService {
 
         // [MODIFIED v6290] Use new helper function to build rows
         const createRow = (number, description, qty, price, discountedPrice, isExcluded = false) => {
-            const priceStyle = isExcluded ? 'style="text-decoration: line-through; color: #999999;"' : '';
             // [FIX v6291] 問題 3: 如果 Price 被排除，Discounted Price 應為 0
             const discountedPriceValue = isExcluded ? 0 : discountedPrice;
-
-            // [FIX v6291] 問題 3.A & 3.B: (GTH) 
             const isDiscounted = discountedPriceValue < price;
-            // 3.A: Red (預設)
-            // 3.B: Black (如果 == price)
-            const discountedPriceStyle = isDiscounted ? 'style="font-weight: bold; color: #d32f2f;"' : 'style="font-weight: bold; color: #333;"';
+
+            // [FIX v6291] (手機 PDF 問題 1.2, 1.3, 1.4) 實作新的顏色/樣式邏輯 (GTH 版本)
+            let priceStyle = 'style="color: #333;"'; // (1.3) 預設 Price 為黑色
+            let discountedPriceStyle = 'style="font-weight: bold; color: #333;"'; // (1.3) GTH 預設黑色粗體
+
+            if (isExcluded) {
+                // (1.4) Price: 灰色刪除線, Discounted: 紅色
+                priceStyle = 'style="text-decoration: line-through; color: #999999;"';
+                discountedPriceStyle = 'style="font-weight: bold; color: #d32f2f;"';
+            } else if (isDiscounted) {
+                // (1.2) Price: 灰色, Discounted: 紅色
+                priceStyle = 'style="color: #999999;"';
+                discountedPriceStyle = 'style="font-weight: bold; color: #d32f2f;"';
+            }
+            // (1.3) 情況 (isExcluded = false 且 isDiscounted = false) 已在預設值中處理
+
 
             return `
                 <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"
@@ -612,7 +629,7 @@ export class QuoteGeneratorService {
             validItemCount,
             summaryData.firstRbPrice || 0,
             summaryData.disRbPrice || 0,
-            false // 確保 Roller Blinds Price 欄位沒有刪除線
+            false // 確保 Roller Blinds Price 欄位沒有刪除線 (除非有折扣)
         ));
 
         // Row 2: Installation Accessories (Optional)
