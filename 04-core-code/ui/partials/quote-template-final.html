@@ -715,6 +715,20 @@
                 text-align: center !important;
             }
 
+            /* --- [NEW v6291] (手機 PDF 問題 4.A, 4.B) --- */
+            /* 4.B: Total, Deposit, Balance 三行淡黃色背景 */
+            .summary-details tbody tr:nth-last-child(-n+3) {
+                background-color: #FFFFE0 !important;
+                /* Light Yellow */
+            }
+
+            /* 4.A: Balance 改為一般黑體 */
+            .summary-details tr:last-child td,
+            .summary-details tr:last-child strong {
+                font-weight: normal !important;
+                color: #333 !important;
+            }
+
             /* --- [END FIX v6291] --- */
         }
     </style>
@@ -758,10 +772,10 @@
                         <table class="items-table" border="1" cellpadding="0" cellspacing="0">
                             <colgroup>
                                 <col style="width: 8%;">
-                                <col style="width: 37.6%;">
+                                <col style="width: 34%;">
                                 <col style="width: 14.4%;">
-                                <col style="width: 20%;">
-                                <col style="width: 20%;">
+                                <col style="width: 21.8%;">
+                                <col style="width: 21.8%;">
                             </colgroup>
                             <thead>
                                 <tr>
