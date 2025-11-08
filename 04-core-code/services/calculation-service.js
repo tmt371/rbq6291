@@ -164,7 +164,6 @@ export class CalculationService {
         const f1KeyMap = {
             'winder': 'cost-winder',
             'motor': 'cost-motor',
-
             'remote-1ch': 'remoteSingleChannel',
             'remote-16ch': 'remoteMultiChannel16',
             'charger': 'charger',
@@ -175,7 +174,6 @@ export class CalculationService {
 
         const accessoryKey = f1KeyMap[componentKey];
         if (!accessoryKey) {
-
             console.error(`No accessory key found for F1 component: ${componentKey}`);
             return 0;
         }
@@ -295,7 +293,6 @@ export class CalculationService {
         return {
             totalSumForRbTime: totalSumFromQuickQuote,
             wifiSum,
-
             deliveryFee,
             installFee,
             removalFee,
@@ -304,7 +301,6 @@ export class CalculationService {
             firstRbPrice,
             disRbPrice,
             sumPrice, // (new value for f2-b22)
-
             rbProfit,
             singleprofit,
 
@@ -312,14 +308,12 @@ export class CalculationService {
             sumProfit: sumProfit, // (for f2-b23 - will be removed in Phase 3)
             gst: old_gst, // (for getQuoteTemplateData compatibility - will be removed in Phase 4)
 
-
             // --- New values (for Phase 2+) ---
             f2_17_pre_sum: f2_17_pre_sum,
             newOffer: newOffer,
             new_gst: potential_gst, // [MODIFIED] Always return the potential_gst for display
             grandTotal: grandTotal,
             netProfit: netProfit, // (new value for f2-b25)
-
 
             mulTimes // [FIX] Add mulTimes to the return object so its value can be persisted.
         };
@@ -333,7 +327,6 @@ export class CalculationService {
      * @param {object} f3Data - Data from the F3 form fields.
      * @returns {object} A comprehensive data object ready for template population.
      */
-
     getQuoteTemplateData(quoteData, ui, f3Data) {
         const summaryData = this.calculateF2Summary(quoteData, ui);
 
@@ -379,7 +372,6 @@ export class CalculationService {
             issueDate: f3Data.issueDate,
             dueDate: f3Data.dueDate,
             customerName: f3Data.customerName, // [NEW] Added for direct access in template
-
             customerAddress: f3Data.customerAddress, // [NEW]
             customerPhone: f3Data.customerPhone, // [NEW]
             customerEmail: f3Data.customerEmail, // [NEW]
@@ -387,8 +379,11 @@ export class CalculationService {
             // [MODIFIED] (Phase 4) All totals are now based on the new grandTotal
             subtotal: `$${(summaryData.sumPrice || 0).toFixed(2)}`,
             gst: `$${gstValue.toFixed(2)}`,
-
             grandTotal: `$${grandTotal.toFixed(2)}`,
+
+            // [FIX v6291] 問題 5: 確保 ourOffer 被正確傳遞
+            ourOffer: `$${newOfferValue.toFixed(2)}`,
+
             // [MODIFIED v6290 Task 3] Use correct values from F2 state
             deposit: `$${(depositValue || 0).toFixed(2)}`,
             balance: `$${(balanceValue || 0).toFixed(2)}`,
@@ -405,7 +400,6 @@ export class CalculationService {
             // Data for the accessories table (Appendix)
             motorQty: motorQty || '',
             motorPrice: formatPrice(motorPrice),
-
             remote1chQty: remote1chQty || '',
             remote1chPrice: formatPrice(remote1chPrice),
             remote16chQty: remote16chQty || '',
@@ -413,7 +407,6 @@ export class CalculationService {
             chargerQty: chargerQty || '',
             chargerPrice: formatPrice(chargerPrice),
             cord3mQty: cord3mQty || '',
-
             cord3mPrice: formatPrice(cord3mPrice),
             eAcceSum: formatPrice(summaryData.eAcceSum),
 
