@@ -676,6 +676,46 @@
             .notes-terms-box {
                 min-width: 0 !important;
             }
+
+            /* --- [NEW v6291] Print Style Overrides for Mobile (PDF Fix) --- */
+            .items-table th {
+                text-align: left !important;
+                font-size: 90% !important;
+                /* 1.F */
+                padding: 10px 8px !important;
+                /* Tighter padding */
+            }
+
+            .items-table td {
+                text-align: left !important;
+                /* 1.C */
+                padding: 10px 8px !important;
+                /* Tighter padding for overflow */
+            }
+
+            .items-table th.align-right,
+            .items-table td.align-right {
+                text-align: right !important;
+            }
+
+            .items-table th:nth-child(1) {
+                /* 1.A (header) */
+                text-align: center !important;
+            }
+
+            .items-table td:first-child {
+                /* 1.A (cell) & 2 */
+                text-align: center !important;
+                background-color: #ffffff !important;
+                color: var(--text-color) !important;
+            }
+
+            .items-table th:nth-child(2) {
+                /* 1.B */
+                text-align: center !important;
+            }
+
+            /* --- [END FIX v6291] --- */
         }
     </style>
 </head>
@@ -714,9 +754,28 @@
                 </section>
 
                 <section class="items-section">
-
                     <div class="table-scroll-wrapper">
-                        {{{itemsTableBody}}}
+                        <table class="items-table" border="1" cellpadding="0" cellspacing="0">
+                            <colgroup>
+                                <col style="width: 8%;">
+                                <col style="width: 34%;">
+                                <col style="width: 18%;">
+                                <col style="width: 20%;">
+                                <col style="width: 20%;">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>NO</th>
+                                    <th>Description</th>
+                                    <th class="align-right">QTY</th>
+                                    <th class="align-right">Price</th>
+                                    <th class="align-right">Discounted Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{{itemsTableBody}}}
+                            </tbody>
+                        </table>
                     </div>
                 </section>
 
